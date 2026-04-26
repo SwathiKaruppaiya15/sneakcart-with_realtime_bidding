@@ -1,0 +1,88 @@
+.wishlist-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.wishlist-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.wishlist-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.wishlist-count {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.wishlist-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-remove-wish {
+  width: 100%;
+  padding: 8px;
+  background: #fff;
+  border: 1.5px solid #e53935;
+  color: #e53935;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-remove-wish:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+/* Empty */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  color: #ddd;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #999;
+  margin-bottom: 24px;
+}
+
+.btn-browse {
+  display: inline-block;
+  background: #111;
+  color: #fff;
+  padding: 11px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.btn-browse:hover { background: #f5a623; }
