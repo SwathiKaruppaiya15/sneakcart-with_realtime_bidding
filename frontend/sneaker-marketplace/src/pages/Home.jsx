@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom'
 import dummyImg from '../assets/dummy.jpg'
+import heroImg from '../assets/hero-section-img.jpg'
+import runImg from '../assets/running.avif'
+import basket from '../assets/basket.webp'
+import lifestyle from '../assets/lifestyle.jpg'
+import skate from '../assets/skate.jpg'
 import { products } from '../services/productService'
 import ProductCard from '../components/ProductCard'
 import './Home.css'
@@ -26,7 +31,7 @@ function Home() {
           </div>
         </div>
         <div className="hero-img-wrap">
-          <img src={dummyImg} alt="Featured Sneaker" className="hero-img" />
+          <img src={heroImg} alt="Featured Sneaker" className="hero-img" />
         </div>
       </section>
 

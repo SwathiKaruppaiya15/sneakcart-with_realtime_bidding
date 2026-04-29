@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { auctionShoes, products } from '../services/productService'
-import dummyImg from '../assets/dummy.jpg'
+import { getImage } from '../utils/getImage'
 import './Auction.css'
 
 const INR = (n) => `₹${n.toLocaleString('en-IN')}`
@@ -82,7 +82,7 @@ function Auction() {
         {/* Left — shoe details */}
         <div className="auction-detail">
           <div className="auction-img-box">
-            <img src={dummyImg} alt={shoe.name} />
+            <img src={getImage(shoe.image)} alt={shoe.name} />
             {!done && <span className="live-pill">🔴 LIVE AUCTION</span>}
           </div>
           <div className="auction-meta">
@@ -169,7 +169,7 @@ function Auction() {
         <div className="rec-grid">
           {recommended.map(p => (
             <div key={p.id} className="rec-card">
-              <img src={dummyImg} alt={p.name} />
+              <img src={getImage(p.image)} alt={p.name} />
               <p className="rec-brand">{p.brand}</p>
               <p className="rec-name">{p.name}</p>
               <p className="rec-price">{INR(p.price)}</p>

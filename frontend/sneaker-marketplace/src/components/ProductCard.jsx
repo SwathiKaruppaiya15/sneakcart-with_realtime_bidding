@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import dummyImg from '../assets/dummy.jpg'
+import { getImage } from '../utils/getImage'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import './ProductCard.css'
@@ -53,7 +53,7 @@ function ProductCard({ product }) {
         onKeyDown={e => e.key === 'Enter' && goToDetail()}
         style={{ cursor: 'pointer' }}
       >
-        <img src={dummyImg} alt={name} className="product-img" />
+        <img src={getImage(product.image)} alt={name} className="product-img" />
         {badge && <span className="product-badge">{badge}</span>}
         <button
           className={`wishlist-btn ${wishlisted ? 'wishlisted' : ''}`}
