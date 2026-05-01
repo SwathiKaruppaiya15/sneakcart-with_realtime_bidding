@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "auctions")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Auction {
 
     @Id

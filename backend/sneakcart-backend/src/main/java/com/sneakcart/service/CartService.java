@@ -11,12 +11,13 @@ import com.sneakcart.repository.CartItemRepository;
 import com.sneakcart.repository.CartRepository;
 import com.sneakcart.repository.ProductRepository;
 import com.sneakcart.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 @Service
-@RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository     cartRepository;
@@ -24,12 +25,23 @@ public class CartService {
     private final UserRepository     userRepository;
     private final ProductRepository  productRepository;
 
-    // Get or create cart for user
+    public CartService(CartRepository cartRepository,
+                       CartItemRepository cartItemRepository,
+                       UserRepository userRepository,
+                       ProductRepository productRepository) {
+        this.cartRepository     = cartRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.userRepository     = userRepository;
+        this.productRepository  = productRepository;
+    }
+
     public Cart getOrCreateCart(Long userId) {
         return cartRepository.findByUserId(userId).orElseGet(() -> {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-            Cart newCart = Cart.builder().user(user).build();
+            Cart newCart = new Cart();
+            newCart.setUser(user);
+            newCart.setItems(new ArrayList<>());
             return cartRepository.save(newCart);
         });
     }
@@ -41,21 +53,20 @@ public class CartService {
         Product product = productRepository.findById(req.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + req.getProductId()));
 
-        // If same product + same size already in cart → increase quantity
-        cartItemRepository.findByCartIdAndProductIdAndSelectedSize(
-                cart.getId(), req.getProductId(), req.getSelectedSize()
-        ).ifPresentOrElse(
-            existing -> existing.setQuantity(existing.getQuantity() + req.getQuantity()),
-            () -> {
-                CartItem newItem = CartItem.builder()
-                        .cart(cart)
-                        .product(product)
-                        .quantity(req.getQuantity())
-                        .selectedSize(req.getSelectedSize())
-                        .build();
-                cart.getItems().add(newItem);
-            }
-        );
+        Optional<CartItem> existing = cartItemRepository
+                .findByCartIdAndProductIdAndSelectedSize(
+                    cart.getId(), req.getProductId(), req.getSelectedSize());
+
+        if (existing.isPresent()) {
+            existing.get().setQuantity(existing.get().getQuantity() + req.getQuantity());
+        } else {
+            CartItem newItem = new CartItem();
+            newItem.setCart(cart);
+            newItem.setProduct(product);
+            newItem.setQuantity(req.getQuantity());
+            newItem.setSelectedSize(req.getSelectedSize());
+            cart.getItems().add(newItem);
+        }
 
         return cartRepository.save(cart);
     }

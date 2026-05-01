@@ -2,11 +2,14 @@ package com.sneakcart.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
     private Long id;
     private String name;
     private String email;
-    // password is intentionally excluded
+    // password intentionally excluded
 }

@@ -5,7 +5,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "order_items")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderItem {
 
     @Id
@@ -16,7 +19,6 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    // EAGER: always load product details with order item
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
@@ -26,7 +28,6 @@ public class OrderItem {
 
     private String selectedSize;
 
-    // Snapshot of price at time of purchase — price changes won't affect past orders
     @Column(nullable = false)
     private Double priceAtPurchase;
 }

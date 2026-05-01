@@ -7,28 +7,33 @@ import com.sneakcart.exception.ResourceNotFoundException;
 import com.sneakcart.repository.CartRepository;
 import com.sneakcart.repository.OrderRepository;
 import com.sneakcart.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository  userRepository;
     private final CartRepository  cartRepository;
 
+    public OrderService(OrderRepository orderRepository,
+                        UserRepository userRepository,
+                        CartRepository cartRepository) {
+        this.orderRepository = orderRepository;
+        this.userRepository  = userRepository;
+        this.cartRepository  = cartRepository;
+    }
+
     @Transactional
     public Order placeOrder(OrderRequest req) {
-        // 1. Get user
         User user = userRepository.findById(req.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + req.getUserId()));
 
-        // 2. Get user's cart
         Cart cart = cartRepository.findByUserId(req.getUserId())
                 .orElseThrow(() -> new BadRequestException("Cart is empty — add items before placing order"));
 
@@ -36,36 +41,32 @@ public class OrderService {
             throw new BadRequestException("Cart is empty — add items before placing order");
         }
 
-        // 3. Build order
-        Order order = Order.builder()
-                .user(user)
-                .addressLine(req.getAddressLine())
-                .city(req.getCity())
-                .pinCode(req.getPinCode())
-                .phone(req.getPhone())
-                .paymentMethod(Order.PaymentMethod.valueOf(req.getPaymentMethod()))
-                .status(Order.OrderStatus.PROCESSING)
-                .build();
+        Order order = new Order();
+        order.setUser(user);
+        order.setAddressLine(req.getAddressLine());
+        order.setCity(req.getCity());
+        order.setPinCode(req.getPinCode());
+        order.setPhone(req.getPhone());
+        order.setPaymentMethod(Order.PaymentMethod.valueOf(req.getPaymentMethod()));
+        order.setStatus(Order.OrderStatus.PROCESSING);
+        order.setCreatedAt(LocalDateTime.now());
+        order.setItems(new ArrayList<>());
 
-        // 4. Convert cart items → order items, calculate total
         double total = 0.0;
         for (CartItem cartItem : cart.getItems()) {
-            OrderItem orderItem = OrderItem.builder()
-                    .order(order)
-                    .product(cartItem.getProduct())
-                    .quantity(cartItem.getQuantity())
-                    .selectedSize(cartItem.getSelectedSize())
-                    .priceAtPurchase(cartItem.getProduct().getPrice()) // snapshot price
-                    .build();
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setSelectedSize(cartItem.getSelectedSize());
+            orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
             order.getItems().add(orderItem);
             total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
         }
         order.setTotalPrice(total);
 
-        // 5. Save order to PostgreSQL
         Order saved = orderRepository.save(order);
 
-        // 6. Clear the cart after successful order
         cart.getItems().clear();
         cartRepository.save(cart);
 

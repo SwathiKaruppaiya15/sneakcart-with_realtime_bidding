@@ -3,12 +3,22 @@ package com.sneakcart.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductRequest {
-    @NotBlank private String name;
+
+    @NotBlank(message = "Product name is required")
+    private String name;
+
     private String brand;
-    @Positive private Double price;
+
+    @Positive(message = "Price must be positive")
+    private Double price;
+
     private String color;
     private String sizes;
     private String badge;

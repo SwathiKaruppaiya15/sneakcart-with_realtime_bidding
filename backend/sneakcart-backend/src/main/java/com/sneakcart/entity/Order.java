@@ -8,7 +8,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
 
     @Id
@@ -26,7 +29,6 @@ public class Order {
     @Column(nullable = false)
     private Double totalPrice;
 
-    // Delivery address fields
     private String addressLine;
     private String city;
     private String pinCode;

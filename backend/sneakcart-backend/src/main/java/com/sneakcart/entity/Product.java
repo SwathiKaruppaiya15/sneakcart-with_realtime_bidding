@@ -7,7 +7,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "products")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -26,13 +29,14 @@ public class Product {
 
     private String color;
 
-    private String sizes;       // comma-separated: "6,7,8,9,10"
+    private String sizes;
 
-    private String badge;       // "New", "Hot", "Sale", "Trending"
+    private String badge;
 
     @Column(length = 1000)
     private String imageUrl;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean isAuction = false;
 }

@@ -9,7 +9,10 @@ import lombok.*;
            name = "uk_user_product_wishlist",
            columnNames = {"user_id", "product_id"}
        ))
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Wishlist {
 
     @Id
@@ -20,7 +23,6 @@ public class Wishlist {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // EAGER: always load product details with wishlist entry
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

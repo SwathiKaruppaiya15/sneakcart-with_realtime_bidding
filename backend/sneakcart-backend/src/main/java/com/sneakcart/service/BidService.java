@@ -9,7 +9,6 @@ import com.sneakcart.exception.ResourceNotFoundException;
 import com.sneakcart.repository.AuctionRepository;
 import com.sneakcart.repository.BidRepository;
 import com.sneakcart.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +16,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BidService {
 
     private final BidRepository     bidRepository;
     private final AuctionRepository auctionRepository;
     private final UserRepository    userRepository;
 
+    public BidService(BidRepository bidRepository,
+                      AuctionRepository auctionRepository,
+                      UserRepository userRepository) {
+        this.bidRepository     = bidRepository;
+        this.auctionRepository = auctionRepository;
+        this.userRepository    = userRepository;
+    }
+
     @Transactional
     public Bid placeBid(Long auctionId, BidRequest req) {
-        // 1. Validate auction exists and is still active
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Auction not found: " + auctionId));
 
@@ -37,29 +42,24 @@ public class BidService {
             throw new BadRequestException("Auction has ended");
         }
 
-        // 2. Validate user exists
         User user = userRepository.findById(req.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + req.getUserId()));
 
-        // 3. Validate bid > current highest bid
         double currentHighest = bidRepository.findHighestBid(auctionId)
                 .map(Bid::getAmount)
                 .orElse(auction.getBasePrice());
 
         if (req.getAmount() <= currentHighest) {
             throw new BadRequestException(
-                "Bid must be higher than current highest bid of ₹" + currentHighest
+                "Bid must be higher than current highest bid of " + currentHighest
             );
         }
 
-        // 4. Save bid to PostgreSQL
-        Bid bid = Bid.builder()
-                .auction(auction)
-                .user(user)
-                .amount(req.getAmount())
-                .timestamp(LocalDateTime.now())
-                .build();
-
+        Bid bid = new Bid();
+        bid.setAuction(auction);
+        bid.setUser(user);
+        bid.setAmount(req.getAmount());
+        bid.setTimestamp(LocalDateTime.now());
         return bidRepository.save(bid);
     }
 

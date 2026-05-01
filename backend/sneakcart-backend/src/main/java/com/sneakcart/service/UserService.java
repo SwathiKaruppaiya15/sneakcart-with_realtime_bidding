@@ -7,25 +7,25 @@ import com.sneakcart.entity.User;
 import com.sneakcart.exception.BadRequestException;
 import com.sneakcart.exception.ResourceNotFoundException;
 import com.sneakcart.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserResponse register(RegisterRequest req) {
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new BadRequestException("Email already registered: " + req.getEmail());
         }
-        // NOTE: In production, hash the password with BCrypt before saving
-        User user = User.builder()
-                .name(req.getName())
-                .email(req.getEmail().toLowerCase())
-                .password(req.getPassword())
-                .build();
+        User user = new User();
+        user.setName(req.getName());
+        user.setEmail(req.getEmail().toLowerCase());
+        user.setPassword(req.getPassword());
         User saved = userRepository.save(user);
         return new UserResponse(saved.getId(), saved.getName(), saved.getEmail());
     }
@@ -33,8 +33,6 @@ public class UserService {
     public UserResponse login(LoginRequest req) {
         User user = userRepository.findByEmail(req.getEmail().toLowerCase())
                 .orElseThrow(() -> new BadRequestException("Invalid email or password"));
-
-        // NOTE: In production, use BCrypt.matches() to compare hashed passwords
         if (!user.getPassword().equals(req.getPassword())) {
             throw new BadRequestException("Invalid email or password");
         }
