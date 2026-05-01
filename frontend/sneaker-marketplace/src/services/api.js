@@ -53,3 +53,6 @@ export const apiAdminUpdateStock = (id, adminId, stock)   =>
     body: JSON.stringify({ stock }),
   })
 export const apiAdminAnalytics   = (adminId)              => request(`/admin/analytics?adminId=${adminId}`)
+
+// BASE URL
+export default BASE_URL;
