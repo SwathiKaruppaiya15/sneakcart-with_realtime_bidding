@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import dummyImg from '../assets/dummy.jpg'
+import { getImage } from '../utils/getImage'
 import './Cart.css'
 
 const INR = (n) => `₹${n.toLocaleString('en-IN')}`
@@ -34,7 +34,7 @@ function Cart() {
           <div className="cart-items">
             {cart.map(item => (
               <div key={item.cartKey} className="cart-item">
-                <img src={dummyImg} alt={item.name} className="cart-item-img" />
+                <img src={getImage(item.image)} alt={item.name} className="cart-item-img" />
 
                 <div className="cart-item-info">
                   <p className="cart-item-brand">{item.brand}</p>

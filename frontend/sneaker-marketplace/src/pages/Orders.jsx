@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getOrders, products } from '../services/productService'
-import dummyImg from '../assets/dummy.jpg'
+import { getImage } from '../utils/getImage'
 import './Orders.css'
 
 const INR = (n) => `₹${n.toLocaleString('en-IN')}`
@@ -47,7 +47,7 @@ function Orders() {
               <div className="order-items">
                 {order.items.map((item, idx) => (
                   <div key={`${item.id}-${idx}`} className="order-item">
-                    <img src={dummyImg} alt={item.name} className="order-item-img" />
+                    <img src={getImage(item.image)} alt={item.name} className="order-item-img" />
                     <div className="order-item-detail">
                       <p className="order-item-brand">{item.brand}</p>
                       <p className="order-item-name">{item.name}</p>
@@ -89,7 +89,7 @@ function Orders() {
         <div className="rec-grid">
           {recommended.map(p => (
             <Link to="/products" key={p.id} className="rec-card">
-              <img src={dummyImg} alt={p.name} />
+              <img src={getImage(p.image)} alt={p.name} />
               <div className="rec-info">
                 <p className="rec-brand">{p.brand}</p>
                 <p className="rec-name">{p.name}</p>

@@ -7,6 +7,7 @@ function Footer() {
         <div className="footer-brand">
           <span>👟 SneakCart</span>
           <p>Your go-to marketplace for premium sneakers.</p>
+          <p>This is only for learning and study purpose.</p>
         </div>
         <div className="footer-links">
           <h4>Quick Links</h4>
@@ -20,7 +21,7 @@ function Footer() {
         <div className="footer-contact">
           <h4>Contact</h4>
           <p>support@sneakcart.com</p>
-          <p>+1 (800) 555-0199</p>
+          <p>+0422 12082 006</p>
         </div>
       </div>
       <div className="footer-bottom">

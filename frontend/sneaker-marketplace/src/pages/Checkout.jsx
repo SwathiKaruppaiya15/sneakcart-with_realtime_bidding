@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { savedAddresses } from '../services/productService'
-import dummyImg from '../assets/dummy.jpg'
+import { getImage } from '../utils/getImage'
 import './Checkout.css'
 
 const INR = (n) => `₹${n.toLocaleString('en-IN')}`
@@ -194,7 +194,7 @@ function Checkout() {
                 ) : (
                   cart.map(item => (
                     <div key={item.cartKey} className="preview-item">
-                      <img src={dummyImg} alt={item.name} className="preview-img" />
+                      <img src={getImage(item.image)} alt={item.name} className="preview-img" />
                       <div className="preview-item-info">
                         <p className="preview-item-name">{item.name}</p>
                         <p className="preview-item-meta">Size {item.selectedSize} · {item.color} · Qty {item.qty}</p>

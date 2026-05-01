@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { auctionShoes } from '../services/productService'
-import dummyImg from '../assets/dummy.jpg'
+import { getImage } from '../utils/getImage'
 import './Trends.css'
 
 const INR = (n) => `₹${n.toLocaleString('en-IN')}`
@@ -32,7 +32,7 @@ function AuctionCard({ shoe, rank }) {
     <div className={`auction-card ${urgent ? 'urgent' : ''}`}>
       <div className="auction-rank">#{rank}</div>
       <div className="auction-img-wrap">
-        <img src={dummyImg} alt={shoe.name} className="auction-img" />
+        <img src={getImage(shoe.image)} alt={shoe.name} className="auction-img" />
         <span className="auction-live-badge">🔴 LIVE</span>
       </div>
       <div className="auction-info">
