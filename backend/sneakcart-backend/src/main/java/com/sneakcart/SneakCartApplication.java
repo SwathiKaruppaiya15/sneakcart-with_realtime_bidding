@@ -13,19 +13,16 @@ public class SneakCartApplication {
         SpringApplication.run(SneakCartApplication.class, args);
     }
 
-    // Allow React frontend to call this backend
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins(
-                            "http://localhost:5173",  // Vite dev server
-                            "http://localhost:3000"   // Docker/Nginx
-                        )
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                        .allowedHeaders("*");
+                registry.addMapping("/**")          // all endpoints, not just /api/**
+                        .allowedOriginPatterns("*") // allow all origins (Render, localhost, etc.)
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(false);
             }
         };
     }

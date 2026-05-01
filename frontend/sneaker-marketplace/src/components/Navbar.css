@@ -75,6 +75,17 @@
   font-family: inherit;
 }
 
+/* Admin link — always highlighted */
+.nav-admin-link {
+  color: #f5a623 !important;
+  font-weight: 700 !important;
+}
+
+.nav-admin-link:hover,
+.nav-admin-link.active {
+  color: #fff !important;
+}
+
 /* Badge */
 .nav-badge {
   display: inline-flex;

@@ -26,8 +26,9 @@ public class UserService {
         user.setName(req.getName());
         user.setEmail(req.getEmail().toLowerCase());
         user.setPassword(req.getPassword());
+        user.setRole(User.Role.USER);
         User saved = userRepository.save(user);
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail());
+        return toResponse(saved);
     }
 
     public UserResponse login(LoginRequest req) {
@@ -36,12 +37,21 @@ public class UserService {
         if (!user.getPassword().equals(req.getPassword())) {
             throw new BadRequestException("Invalid email or password");
         }
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return toResponse(user);
     }
 
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return toResponse(user);
+    }
+
+    private UserResponse toResponse(User user) {
+        return new UserResponse(
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            user.getRole().name()
+        );
     }
 }

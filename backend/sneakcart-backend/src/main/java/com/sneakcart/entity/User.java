@@ -29,4 +29,11 @@ public class User {
     @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Role role = Role.USER;
+
+    public enum Role { USER, ADMIN }
 }

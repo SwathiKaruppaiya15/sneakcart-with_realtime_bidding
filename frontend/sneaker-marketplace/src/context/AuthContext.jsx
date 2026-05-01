@@ -2,8 +2,12 @@ import { createContext, useContext, useState } from 'react'
 
 const AuthContext = createContext()
 
+// ── Hardcoded admin credentials ───────────────────────────────────────────────
+const ADMIN_EMAIL    = 'swathikaruppaiya63@gmail.com'
+const ADMIN_PASSWORD = 'Swathi@123'
+
 export function AuthProvider({ children }) {
-  // Load persisted user on first render
+
   const [currentUser, setCurrentUser] = useState(() => {
     try { return JSON.parse(localStorage.getItem('currentUser')) || null }
     catch { return null }
@@ -15,7 +19,9 @@ export function AuthProvider({ children }) {
     if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
       throw new Error('An account with this email already exists.')
     }
-    const newUser = { name, email: email.toLowerCase(), password }
+    // Admin email cannot be used for signup
+    const role = email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'ADMIN' : 'USER'
+    const newUser = { name, email: email.toLowerCase(), password, role }
     localStorage.setItem('users', JSON.stringify([...users, newUser]))
     _persist(newUser)
     return newUser
@@ -23,13 +29,34 @@ export function AuthProvider({ children }) {
 
   // ── Sign In ──────────────────────────────────────────────────────────────
   const login = (email, password) => {
+    const normalizedEmail = email.toLowerCase().trim()
+
+    // Check admin credentials first
+    if (
+      normalizedEmail === ADMIN_EMAIL.toLowerCase() &&
+      password === ADMIN_PASSWORD
+    ) {
+      const adminUser = {
+        id:    0,
+        name:  'Admin',
+        email: ADMIN_EMAIL.toLowerCase(),
+        role:  'ADMIN',
+      }
+      _persist(adminUser)
+      return adminUser
+    }
+
+    // Regular user login from localStorage
     const users = getUsers()
     const user  = users.find(
-      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+      u => u.email.toLowerCase() === normalizedEmail && u.password === password
     )
     if (!user) throw new Error('Incorrect email or password.')
-    _persist(user)
-    return user
+
+    // Ensure role is always set
+    const userWithRole = { ...user, role: user.role || 'USER' }
+    _persist(userWithRole)
+    return userWithRole
   }
 
   // ── Logout ───────────────────────────────────────────────────────────────

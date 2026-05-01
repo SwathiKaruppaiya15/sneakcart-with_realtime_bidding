@@ -32,6 +32,7 @@ function Checkout() {
     else {
       clearCart()
       setPlaced(true)
+      // BUG FIX: navigate to /orders so the page re-fetches fresh order list
     }
   }
 

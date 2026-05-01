@@ -71,6 +71,16 @@ function Navbar() {
             Orders
           </button>
 
+          {/* Admin link — ONLY visible when role is ADMIN */}
+          {currentUser?.role === 'ADMIN' && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-icon-link nav-admin-link ${isActive ? 'active' : ''}`}
+            >
+              ⚙ Admin
+            </NavLink>
+          )}
+
           {/* Auth section */}
           {currentUser ? (
             <div className="nav-user" onMouseLeave={() => setUserMenuOpen(false)}>

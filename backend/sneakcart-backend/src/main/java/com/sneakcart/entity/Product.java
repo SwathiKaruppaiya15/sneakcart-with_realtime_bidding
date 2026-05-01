@@ -1,6 +1,7 @@
 package com.sneakcart.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -28,9 +29,7 @@ public class Product {
     private Double price;
 
     private String color;
-
     private String sizes;
-
     private String badge;
 
     @Column(length = 1000)
@@ -39,4 +38,10 @@ public class Product {
     @Column(nullable = false)
     @Builder.Default
     private Boolean isAuction = false;
+
+    // Stock management
+    @Min(value = 0, message = "Stock cannot be negative")
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer stock = 0;
 }
